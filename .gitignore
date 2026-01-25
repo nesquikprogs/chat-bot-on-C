@@ -1,0 +1,26 @@
+# Папки сборки
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+
+# Настройки Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+
+# Результаты сборки
+*.exe
+*.dll
+*.pdb
+
+# NuGet
+packages/
+
+# Временные файлы
+*.tmp
+*.log
+
+# Файл истории чата
+chat_history.json
