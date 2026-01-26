@@ -32,7 +32,8 @@
 ## Структура проекта
 
 ```
-ChatBotLab/
+chat-bot-on-C
+/
 ├── App.xaml              # Настройки приложения
 ├── App.xaml.cs           # Точка входа
 ├── LoginWindow.xaml      # Окно авторизации (разметка)
