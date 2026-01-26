@@ -33,19 +33,19 @@ namespace ChatBotLab
             /// Реплики заданного шаблона
 
             // Приветствия
-            if (Regex.IsMatch(userMessage, @"\b(привет|здравствуй|hi|добрый\s+день)\b", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(userMessage, @"\b(привет|здравствуй|hi|добрый\s+день)\b", RegexOptions.IgnoreCase)) // Регулярное выражение для приветствий
             {
                 return "Привет, " + userName + "!";
             }
 
             // Прощания
-            if (Regex.IsMatch(userMessage, @"\b(пока|до\s+свидания|до\s+завтра)\b", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(userMessage, @"\b(пока|до\s+свидания|до\s+завтра)\b", RegexOptions.IgnoreCase)) // Регулярное выражение для прощаний
             {
                 return "Пока, " + userName + ". До встречи!";
             }
 
             // Как дела 
-            if (Regex.IsMatch(userMessage, @"\b(как\s+дела|как\s+ты|как\s+жизнь|как\s+настроение)\b", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(userMessage, @"\b(как\s+дела|как\s+ты|как\s+жизнь|как\s+настроение)\b", RegexOptions.IgnoreCase)) // Регулярное выражение для как дела
             {
                 return "У меня всё хорошо, " + userName + "!";
             }
@@ -53,19 +53,19 @@ namespace ChatBotLab
             /// Простые команды
 
             // Который час
-            if (Regex.IsMatch(userMessage, @"(который\s+час|сколько\s+времени?)\??", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(userMessage, @"(который\s+час|сколько\s+времени?)\??", RegexOptions.IgnoreCase)) // Регулярное выражение для который час
             {
                 return "Сейчас " + DateTime.Now.ToString("HH:mm:ss");
             }
 
             // Какая дата
-            if (Regex.IsMatch(userMessage, @"\b(дата|число|сегодня|какое\s+число|какая\s+дата|какое\s+сегодня\s+число)\b", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(userMessage, @"\b(дата|число|сегодня|какое\s+число|какая\s+дата|какое\s+сегодня\s+число)\b", RegexOptions.IgnoreCase)) // Регулярное выражение для какая дата
             {
                 return "Сегодня " + DateTime.Now.ToString("dd MMMM yyyy") + " года";
             }
 
             // Статистика общения с ботом
-            if (Regex.IsMatch(userMessage, @"\bстатистика\b", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(userMessage, @"\bстатистика\b", RegexOptions.IgnoreCase)) // Регулярное выражение для статистики
             {
                 int totalMessages = _history.Count; // Общее количество сообщений
                 int userMessages = _history.Count(m => m.Author == userName); // Количество сообщений от пользователя
@@ -76,44 +76,44 @@ namespace ChatBotLab
             /// Команды с параметрами
 
             // Умножение
-            var multiplyMatch = Regex.Match(userMessage, @"(умножь|перемножь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            var multiplyMatch = Regex.Match(userMessage, @"(умножь|перемножь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для умножения
             if (multiplyMatch.Success)
             {
-                if (int.TryParse(multiplyMatch.Groups[2].Value, out int a) &&
-                    int.TryParse(multiplyMatch.Groups[3].Value, out int b))
+                if (int.TryParse(multiplyMatch.Groups[2].Value, out int a) && // Пытается преобразовать вторую группу в целое число
+                    int.TryParse(multiplyMatch.Groups[3].Value, out int b)) // Пытается преобразовать третую группу в целое число
                 {
                     return "Результат: " + (a * b); // Возвращает результат умножения
                 }
             }
 
             // Сложение
-            var addMatch = Regex.Match(userMessage, @"(сложи|плюс|прибавь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            var addMatch = Regex.Match(userMessage, @"(сложи|плюс|прибавь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для сложения
             if (addMatch.Success)
             {
-                if (int.TryParse(addMatch.Groups[2].Value, out int a) &&
-                    int.TryParse(addMatch.Groups[3].Value, out int b))
+                if (int.TryParse(addMatch.Groups[2].Value, out int a) && // Пытается преобразовать вторую группу в целое число
+                    int.TryParse(addMatch.Groups[3].Value, out int b)) // Пытается преобразовать третую группу в целое число
                 {
                     return "Результат: " + (a + b); // Возвращает результат сложения
                 }
             }
 
             // Вычитание
-            var subtractMatch = Regex.Match(userMessage, @"(вычти|минус|отними)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            var subtractMatch = Regex.Match(userMessage, @"(вычти|минус|отними)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для вычитания
             if (subtractMatch.Success)
             {
-                if (int.TryParse(subtractMatch.Groups[2].Value, out int a) &&
-                    int.TryParse(subtractMatch.Groups[3].Value, out int b))
+                if (int.TryParse(subtractMatch.Groups[2].Value, out int a) && // Пытается преобразовать вторую группу в целое число
+                    int.TryParse(subtractMatch.Groups[3].Value, out int b)) // Пытается преобразовать третую группу в целое число
                 {
                     return "Результат: " + (a - b); // Возвращает результат вычитания
                 }
             }
 
             // Деление
-            var divideMatch = Regex.Match(userMessage, @"(раздели|подели|делить)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            var divideMatch = Regex.Match(userMessage, @"(раздели|подели|делить)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для деления
             if (divideMatch.Success)
             {
-                if (int.TryParse(divideMatch.Groups[2].Value, out int a) &&
-                    int.TryParse(divideMatch.Groups[3].Value, out int b))
+                if (int.TryParse(divideMatch.Groups[2].Value, out int a) && // Пытается преобразовать вторую группу в целое число
+                    int.TryParse(divideMatch.Groups[3].Value, out int b)) // Пытается преобразовать третую группу в целое число 
                 {
                     if (b == 0)
                     {
