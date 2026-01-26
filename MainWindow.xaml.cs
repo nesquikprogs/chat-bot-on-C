@@ -9,13 +9,13 @@ namespace ChatBotLab
     public partial class MainWindow : Window
     {
         // Экземпляр чат-бота
-        private ChatBot bot;
+        private ChatBotBase bot;
 
         // Конструктор главного окна
         public MainWindow()
         {
             InitializeComponent(); // Инициализирует компоненты окна
-            bot = new ChatBot(); // Создаёт экземпляр чат-бота
+            bot = new ChatBot(); // Создаёт экземпляр чат-бота (используется через абстрактный контракт)
             bot.LoadHistory(); // Загружает историю сообщений
             UpdateChatHistory(); // Обновляет отображение истории
         }
@@ -45,7 +45,7 @@ namespace ChatBotLab
 
                 bot.AddMessage(App.UserName, userMessage); // Добавляет сообщение пользователя в историю
 
-                string botResponse = bot.ProcessMessage(userMessage); // Получает ответ от бота
+                string botResponse = bot.ProcessMessage(App.UserName, userMessage); // Получает ответ от бота
                 if (!string.IsNullOrEmpty(botResponse)) // Проверяет, что ответ не пустой
                 {
                     bot.AddMessage("Бот", botResponse); // Добавляет ответ бота в историю
