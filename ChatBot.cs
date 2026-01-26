@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace ChatBotLab
 {
@@ -28,32 +29,23 @@ namespace ChatBotLab
         public override string ProcessMessage(string userName, string userMessage)
         {
             userName = userName ?? string.Empty;
-            userMessage = userMessage.ToLower(); // Преобразует сообщение в нижний регистр
 
             /// Реплики заданного шаблона
 
             // Приветствия
-            if (userMessage.Contains("привет") ||
-                userMessage.Contains("здравствуй") ||
-                userMessage.Contains("hi") ||
-                userMessage.Contains("добрый день"))
+            if (Regex.IsMatch(userMessage, @"\b(привет|здравствуй|hi|добрый\s+день)\b", RegexOptions.IgnoreCase))
             {
                 return "Привет, " + userName + "!";
             }
 
             // Прощания
-            if (userMessage.Contains("пока") ||
-                userMessage.Contains("до свидания") ||
-                userMessage.Contains("до завтра"))
+            if (Regex.IsMatch(userMessage, @"\b(пока|до\s+свидания|до\s+завтра)\b", RegexOptions.IgnoreCase))
             {
                 return "Пока, " + userName + ". До встречи!";
             }
 
             // Как дела 
-            if (userMessage.Contains("как дела") ||
-                userMessage.Contains("как ты") ||
-                userMessage.Contains("как жизнь") ||
-                userMessage.Contains("как настроение"))
+            if (Regex.IsMatch(userMessage, @"\b(как\s+дела|как\s+ты|как\s+жизнь|как\s+настроение)\b", RegexOptions.IgnoreCase))
             {
                 return "У меня всё хорошо, " + userName + "!";
             }
@@ -61,26 +53,19 @@ namespace ChatBotLab
             /// Простые команды
 
             // Который час
-            if (userMessage.Contains("который час?") ||
-                userMessage.Contains("сколько время?") ||
-                userMessage.Contains("сколько времени?"))
+            if (Regex.IsMatch(userMessage, @"(который\s+час|сколько\s+времени?)\??", RegexOptions.IgnoreCase))
             {
                 return "Сейчас " + DateTime.Now.ToString("HH:mm:ss");
             }
 
             // Какая дата
-            if (userMessage.Contains("дата") ||
-                userMessage.Contains("число") ||
-                userMessage.Contains("сегодня") ||
-                userMessage.Contains("какое число") ||
-                userMessage.Contains("какая дата") ||
-                userMessage.Contains("какое сегодня число"))
+            if (Regex.IsMatch(userMessage, @"\b(дата|число|сегодня|какое\s+число|какая\s+дата|какое\s+сегодня\s+число)\b", RegexOptions.IgnoreCase))
             {
                 return "Сегодня " + DateTime.Now.ToString("dd MMMM yyyy") + " года";
             }
 
             // Статистика общения с ботом
-            if (userMessage.Contains("статистика"))
+            if (Regex.IsMatch(userMessage, @"\bстатистика\b", RegexOptions.IgnoreCase))
             {
                 int totalMessages = _history.Count; // Общее количество сообщений
                 int userMessages = _history.Count(m => m.Author == userName); // Количество сообщений от пользователя
@@ -91,58 +76,44 @@ namespace ChatBotLab
             /// Команды с параметрами
 
             // Умножение
-            if (userMessage.StartsWith("умножь") ||
-                userMessage.StartsWith("перемножь"))
+            var multiplyMatch = Regex.Match(userMessage, @"(умножь|перемножь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            if (multiplyMatch.Success)
             {
-                var parts = userMessage.Split(' '); // Разделяет сообщение на части
-                if (parts.Length >= 4 &&
-                    int.TryParse(parts[1], out int a) && // Преобразует первую часть в число
-                    int.TryParse(parts[3], out int b)) // Преобразует третью часть в число
+                if (int.TryParse(multiplyMatch.Groups[2].Value, out int a) &&
+                    int.TryParse(multiplyMatch.Groups[3].Value, out int b))
                 {
                     return "Результат: " + (a * b); // Возвращает результат умножения
                 }
-                return "Неверный формат. Пример: умножь 12 на 157"; // Возвращает сообщение об ошибке
             }
 
             // Сложение
-            if (userMessage.StartsWith("сложи") ||
-                userMessage.StartsWith("плюс") ||
-                userMessage.StartsWith("прибавь"))
+            var addMatch = Regex.Match(userMessage, @"(сложи|плюс|прибавь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            if (addMatch.Success)
             {
-                var parts = userMessage.Split(' ');
-                if (parts.Length >= 4 &&
-                    int.TryParse(parts[1], out int a) && // Преобразует первую часть в число
-                    int.TryParse(parts[3], out int b)) // Преобразует третью часть в число
+                if (int.TryParse(addMatch.Groups[2].Value, out int a) &&
+                    int.TryParse(addMatch.Groups[3].Value, out int b))
                 {
                     return "Результат: " + (a + b); // Возвращает результат сложения
                 }
-                return "Неверный формат. Пример: сложи 45 на 18";
             }
 
             // Вычитание
-            if (userMessage.StartsWith("вычти") ||
-                userMessage.StartsWith("минус") ||
-                userMessage.StartsWith("отними"))
+            var subtractMatch = Regex.Match(userMessage, @"(вычти|минус|отними)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            if (subtractMatch.Success)
             {
-                var parts = userMessage.Split(' '); // Разделяет сообщение на части
-                if (parts.Length >= 4 &&
-                    int.TryParse(parts[1], out int a) && // Преобразует первую часть в число
-                    int.TryParse(parts[3], out int b)) // Преобразует третью часть в число
+                if (int.TryParse(subtractMatch.Groups[2].Value, out int a) &&
+                    int.TryParse(subtractMatch.Groups[3].Value, out int b))
                 {
                     return "Результат: " + (a - b); // Возвращает результат вычитания
                 }
-                return "Неверный формат. Пример: вычти 100 на 37";
             }
 
             // Деление
-            if (userMessage.StartsWith("раздели") ||
-                userMessage.StartsWith("подели") ||
-                userMessage.StartsWith("делить"))
+            var divideMatch = Regex.Match(userMessage, @"(раздели|подели|делить)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase);
+            if (divideMatch.Success)
             {
-                var parts = userMessage.Split(' '); // Разделяет сообщение на части
-                if (parts.Length >= 4 &&
-                    int.TryParse(parts[1], out int a) && // Преобразует первую часть в число
-                    int.TryParse(parts[3], out int b)) // Преобразует третью часть в число
+                if (int.TryParse(divideMatch.Groups[2].Value, out int a) &&
+                    int.TryParse(divideMatch.Groups[3].Value, out int b))
                 {
                     if (b == 0)
                     {
@@ -151,7 +122,6 @@ namespace ChatBotLab
                     double result = (double)a / b; // Вычисляет результат деления
                     return "Результат: " + result; // Возвращает результат деления
                 }
-                return "Неверный формат. Пример: раздели 100 на 4";
             }
 
             // Если ничего не подошло
