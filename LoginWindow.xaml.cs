@@ -15,23 +15,28 @@ namespace ChatBotLab
         // Обработчик нажатия кнопки входа
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string name = txtUserName.Text?.Trim(); // Получает и очищает имя пользователя
+            string name = txtUserName.Text?.Trim();
 
-            if (string.IsNullOrWhiteSpace(name)) // Проверяет, что имя не пустое
+            // Показываем/скрываем ошибку
+            if (string.IsNullOrWhiteSpace(name))
             {
-                MessageBox.Show("Введите имя!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                txtError.Text = "Введите имя!";
+                txtError.Visibility = Visibility.Visible;
                 return;
             }
 
+            txtError.Visibility = Visibility.Collapsed; // скрываем, если всё ок
+
             try
             {
-                App.UserName = name; // Сохраняет имя пользователя в приложении
-                new MainWindow().Show(); // Открывает главное окно чата
-                Close(); // Закрывает окно авторизации
+                App.UserName = name;
+                new MainWindow().Show();
+                Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при запуске чата:\n{ex.Message}", "Ошибка");
+                // Оставляем обработку реальных ошибок 
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка");
             }
         }
     }
