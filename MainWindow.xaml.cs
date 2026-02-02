@@ -51,7 +51,7 @@ namespace ChatBotLab
                     bot.AddMessage("Бот", botResponse); // Добавляет ответ бота в историю
                 }
 
-                UpdateChatHistory(); // Обновляет отображение истории
+                UpdateChatHistory(); // Обновляет отображение историии
             }
         }
 
