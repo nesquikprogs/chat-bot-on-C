@@ -98,13 +98,14 @@ namespace ChatBotLab
             }
 
             // Вычитание
-            var subtractMatch = Regex.Match(userMessage, @"(вычти|минус|отними)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для вычитания
+            var subtractMatch = Regex.Match(userMessage, @"(вычти|минус|отними)\s+(\d+)\s+из\s+(\d+)", RegexOptions.IgnoreCase);
             if (subtractMatch.Success)
             {
-                if (int.TryParse(subtractMatch.Groups[2].Value, out int a) && // Пытается преобразовать вторую группу в целое число
-                    int.TryParse(subtractMatch.Groups[3].Value, out int b)) // Пытается преобразовать третую группу в целое число
+                if (int.TryParse(subtractMatch.Groups[2].Value, out int smaller) &&
+                    int.TryParse(subtractMatch.Groups[3].Value, out int larger))
                 {
-                    return "Результат: " + (a - b); // Возвращает результат вычитания
+                    // Вычитаем меньшее из большего: larger - smaller
+                    return "Результат: " + (larger - smaller);
                 }
             }
 
@@ -124,7 +125,7 @@ namespace ChatBotLab
                 }
             }
 
-            // Прямые арифметические выражения вида "321 - 123", "45 + 67", "100 * 8", "200 / 5"
+            // Прямые арифметические выражения
             var mathMatch = Regex.Match(userMessage, @"^\s*(\-?\d+)\s*([+\-*/])\s*(\-?\d+)\s*$", RegexOptions.IgnoreCase);
             if (mathMatch.Success)
             {
