@@ -8,25 +8,25 @@ using System.Text.RegularExpressions;
 namespace ChatBotLab
 {
     // Класс чат-бота для обработки сообщений и ведения истории переписки
-    public class ChatBot : ChatBotBase
+    public class ChatBot : IMessageHistory, IMessageProcessor
     {
         // История сообщений чата
         private List<Message> _history = new List<Message>();
 
         // Публичная история 
-        public override IReadOnlyList<Message> History => _history;
+        public IReadOnlyList<Message> History => _history;
 
         // Имя файла для сохранения истории
         private const string HistoryFile = "chat_history.json";
 
         // Добавляет сообщение в историю
-        public override void AddMessage(string author, string text)
+        public  void AddMessage(string author, string text)
         {
             _history.Add(new Message(author, text)); // Добавляет сообщение в историю
         }
 
         // Обрабатывает сообщение пользователя и возвращает ответ бота
-        public override string ProcessMessage(string userName, string userMessage)
+        public  string ProcessMessage(string userName, string userMessage)
         {
             userName = userName ?? string.Empty;
 
@@ -164,7 +164,7 @@ namespace ChatBotLab
         }
 
         // Сохраняет историю чата в JSON-файл
-        public override void SaveHistory() // Сохраняет историю чата в JSON-файл
+        public void SaveHistory() // Сохраняет историю чата в JSON-файл
         {
             try
             {
@@ -178,7 +178,7 @@ namespace ChatBotLab
         }
 
         // Загружает историю чата из JSON-файла
-        public override void LoadHistory()
+        public void LoadHistory()
         {
             if (File.Exists(HistoryFile)) // Проверяет, существует ли файл
             {

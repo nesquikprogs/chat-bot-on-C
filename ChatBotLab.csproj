@@ -94,7 +94,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ChatBot.cs" />
-    <Compile Include="ChatBotBase.cs" />
+    <Compile Include="IMessageHistory.cs" />
+    <Compile Include="IMessageProcessor.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
