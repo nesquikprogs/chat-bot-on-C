@@ -2,21 +2,36 @@ using System.Windows;
 
 namespace ChatBotLab
 {
-    // Главный класс приложения
+    /// <summary>
+    /// Главный класс приложения.
+    /// </summary>
     public partial class App : Application
     {
-        // Имя текущего пользователя
+
+        #region Свойства класса App
+
+        /// <summary>
+        /// Свойство для хранения имени пользователя.
+        /// </summary>
         public static string UserName { get; set; } = string.Empty;
 
-        // Метод запуска приложения
+        #endregion
+
+        #region Методы 
+
+        /// <summary>
+        /// Метод, вызываемый при запуске приложения.
+        /// </summary>
+        /// <param name="e">Аргументы запуска приложения.</param>
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e); // Вызывает базовый метод запуска
-
-            // MessageBox.Show("OnStartup сработал!");  // отладочное сообщение 
+            base.OnStartup(e); // Вызывает базовый метод класса Application - запускает приложение
 
             LoginWindow login = new LoginWindow(); // Создаёт окно авторизации
             login.Show(); // Отображает окно авторизации
         }
+
+        #endregion
+
     }
 }

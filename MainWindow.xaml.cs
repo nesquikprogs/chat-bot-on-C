@@ -6,109 +6,142 @@ using System.Windows.Input;
 namespace ChatBotLab
 {
     /// <summary>
-    /// Главное окно чата
+    /// Класс главного окна приложения.
     /// </summary>
     public partial class MainWindow : Window
     {
-        // Интерфейс для работы с историей сообщений
-        private readonly IMessageHistory history;
 
-        // Интерфейс для обработки и генерации ответов бота
-        private readonly IMessageProcessor processor;
+        #region Поля класса MainWindow
 
         /// <summary>
-        /// Конструктор главного окна
+        /// Интерфейс для работы с историей сообщений чата.
+        /// </summary>
+        private readonly IMessageHistory history;
+
+        /// <summary>
+        /// Интерфейс для обработки сообщений чат-ботом.
+        /// </summary>
+        private readonly IMessageProcessor processor;
+
+        #endregion
+
+        #region Конструктор
+
+        /// <summary>
+        /// Конструктор главного окна приложения.
         /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent(); // Инициализация компонентов окна
 
-            // Создаём один объект бота, который реализует оба интерфейса
-            var bot = new ChatBot();
+            var bot = new ChatBot(); // Создание экземпляра чат-бота
 
             // Присваиваем интерфейсы
             history = bot;
             processor = bot;
 
-            // Загружаем историю через интерфейс
-            history.LoadHistory();
+            history.LoadHistory(); // Загружаем историю через интерфейс
 
-            // Показываем начальную историю (или приветствие)
-            UpdateChatHistory();
+            UpdateChatHistory(); // Показываем начальную историю 
         }
 
+        #endregion
+
+        #region Обработчики событий
+
+        #region Кнопка "Отправить"
+
         /// <summary>
-        /// Обработчик нажатия кнопки "Отправить"
+        /// Обработчик нажатия кнопки "Отправить".
         /// </summary>
+        /// <param name="sender">Объект, который вызвал событие(сама кнопка).</param>
+        /// <param name="e">Дополнительные аргументы события.</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SendMessage();
+            SendMessage(); // Отправка сообщения
         }
 
+        #endregion
+
+        #region Нажатие Enter в поле ввода
+
         /// <summary>
-        /// Обработчик нажатия Enter в поле ввода
+        /// Обработчик нажатия клавиши Enter в поле ввода сообщения.
         /// </summary>
+        /// <param name="sender">Объект, который вызвал событие(поле ввода).</param>
+        /// <param name="e">Аргументы события клавиатуры.</param>
         private void txtMessage_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter) // Проверка нажатия клавиши Enter
             {
                 e.Handled = true; // Предотвращаем перенос строки
-                SendMessage();
+                SendMessage(); // Отправка сообщения
             }
         }
 
+        #endregion
+
+        #region Закрытие окна
+
         /// <summary>
-        /// Отправляет сообщение пользователя и получает ответ от бота
+        /// Обработчик события закрытия окна.
+        /// </summary>
+        /// <param name="sender">Объект, который вызвал событие(само окно).</param>
+        /// <param name="e">Специальный аргумент события.</param>
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            history.SaveHistory(); // Сохраняем историю 
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Методы класса MainWindow
+
+        /// <summary>
+        /// Метод для отправки сообщения пользователем и получения ответа от бота.
         /// </summary>
         private void SendMessage()
         {
-            string userMessage = txtMessage.Text?.Trim();
+            string userMessage = txtMessage.Text?.Trim(); // Получаем и обрезаем сообщение пользователя
 
-            if (string.IsNullOrWhiteSpace(userMessage))
-                return;
+            if (string.IsNullOrWhiteSpace(userMessage)) 
+                return; // Выходим, если сообщение пустое
 
-            txtMessage.Clear();
+            txtMessage.Clear(); // Очищаем поле ввода
 
-            // Добавляем сообщение пользователя через интерфейс истории
-            history.AddMessage(App.UserName, userMessage);
+            history.AddMessage(App.UserName, userMessage); // Добавляем сообщение пользователя в историю
 
-            // Получаем ответ бота через интерфейс процессора
-            string botResponse = processor.ProcessMessage(App.UserName, userMessage);
+            string botResponse = processor.ProcessMessage(App.UserName, userMessage); // Получаем ответ бота
 
             if (!string.IsNullOrWhiteSpace(botResponse))
             {
-                // Добавляем ответ бота в историю
-                history.AddMessage("Бот", botResponse);
+                history.AddMessage("Бот", botResponse); // Добавляем ответ бота в историю если он не пустой
             }
 
-            UpdateChatHistory();
+            UpdateChatHistory(); // Обновляем отображение истории чата
         }
 
         /// <summary>
-        /// Обновляет список сообщений в ListBox
+        /// Метод для обновления отображения истории чата в интерфейсе.
         /// </summary>
         private void UpdateChatHistory()
         {
-            lstChatHistory.Items.Clear();
+            lstChatHistory.Items.Clear(); // Очищаем текущее отображение истории
 
-            foreach (var msg in history.History) // Используем свойство из интерфейса
+            foreach (var msg in history.History) // Проходим по всем сообщениям в истории
             {
-                lstChatHistory.Items.Add($"{msg.Time:HH:mm:ss} [{msg.Author}]: {msg.Text}");
+                lstChatHistory.Items.Add($"{msg.Time:HH:mm:ss} [{msg.Author}]: {msg.Text}"); // Добавляем форматированное сообщение в список
             }
 
-            // Безопасная прокрутка к последнему сообщению
-            if (lstChatHistory.Items.Count > 0)
+            if (lstChatHistory.Items.Count > 0) // Если есть хотябы одна сообщения в списке
             {
-                lstChatHistory.ScrollIntoView(lstChatHistory.Items[lstChatHistory.Items.Count - 1]);
+                lstChatHistory.ScrollIntoView(lstChatHistory.Items[lstChatHistory.Items.Count - 1]); // Проскролливаем к последнему сообщению
             }
         }
 
-        /// <summary>
-        /// Обработчик закрытия окна — сохраняем историю
-        /// </summary>
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            history.SaveHistory(); // Сохраняем через интерфейс
-        }
+
+        #endregion
     }
 }

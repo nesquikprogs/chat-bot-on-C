@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ChatBotLab.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Ввод имени"
+        Title="Ввод имени пользователя"
         Height="100"
         Width="300"
         MinHeight="140"
@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0"
-               Content="Введите ваше имя:"
+               Content="Введите Ваше имя:"
                FontSize="13"
                Margin="0,0,0,5"/>
 

@@ -3,41 +3,63 @@ using System.Windows;
 
 namespace ChatBotLab
 {
-    // Окно авторизации пользователя
+    /// <summary>
+    /// Класс окна авторизации.
+    /// </summary>
     public partial class LoginWindow : Window
     {
-        // Конструктор окна авторизации
+
+        #region Конструктор
+
+        /// <summary>
+        /// Конструктор окна авторизации.
+        /// </summary>
         public LoginWindow()
         {
-            InitializeComponent(); // Инициализирует компоненты окна
+            InitializeComponent(); 
         }
 
-        // Обработчик нажатия кнопки входа
+        #endregion
+
+        #region Обработчики событий
+
+        #region Кнопка "Войти"
+
+        /// <summary>
+        /// Метод обработки нажатия кнопки "Войти".
+        /// </summary>
+        /// <param name="sender">Объект, который вызвал событие.</param>
+        /// <param name="e">Дополнительные параметры события.</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string name = txtUserName.Text?.Trim();
+            string name = txtUserName.Text?.Trim(); // Получение и обрезка имени пользователя
 
-            // Показываем/скрываем ошибку
-            if (string.IsNullOrWhiteSpace(name))
+
+            if (string.IsNullOrWhiteSpace(name)) // Проверка на пустое имя
             {
                 txtError.Text = "Введите имя!";
                 txtError.Visibility = Visibility.Visible;
                 return;
             }
 
-            txtError.Visibility = Visibility.Collapsed; // скрываем, если всё ок
+            txtError.Visibility = Visibility.Collapsed; // Скрытие сообщения об ошибке
 
             try
             {
-                App.UserName = name;
-                new MainWindow().Show();
+                App.UserName = name; // Установка имени пользователя в глобальную переменную
+                new MainWindow().Show(); // Создание и отображение главного окна чата
                 Close();
             }
             catch (Exception ex)
             {
-                // Оставляем обработку реальных ошибок 
+
                 MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка");
             }
         }
+
+        #endregion
+
+        #endregion
+
     }
 }

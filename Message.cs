@@ -3,19 +3,38 @@ using System.Text.Json.Serialization;
 
 namespace ChatBotLab
 {
-    // Класс сообщения в чате
+    /// <summary>
+    /// Класс сообщения в чате.
+    /// </summary>
     public class Message
     {
-        // Время отправки сообщения
+
+        #region Свойства
+
+        /// <summary>
+        /// Свойство для времени отправки сообщения.
+        /// </summary>
         public DateTime Time { get; private set; }
 
-        // Автор сообщения 
+        /// <summary>
+        /// Свойство для автора сообщения.
+        /// </summary>
         public string Author { get; private set; }
 
-        // Текст сообщения
+        /// <summary>
+        /// Свойство для текста сообщения.
+        /// </summary>
         public string Text { get; private set; }
 
-        // Конструктор для создания нового сообщения с текущим временем
+        #endregion
+
+        #region Конструкторы
+
+        /// <summary>
+        /// Конструктор для создания нового сообщения с текущим временем.
+        /// </summary>
+        /// <param name="author">Имя отправителя.</param>
+        /// <param name="text">Текст отправленного сообщения.</param>
         public Message(string author, string text)
         {
             Time = DateTime.Now; // Устанавливает текущее время
@@ -23,7 +42,12 @@ namespace ChatBotLab
             Text = text ?? string.Empty; // Устанавливает текст или пустую строку
         }
 
-        // Конструктор для десериализации из JSON с указанным временем
+        /// <summary>
+        /// Констурктор для десериализации из JSON с указанным временем.
+        /// </summary>
+        /// <param name="time">Текущее время.</param>
+        /// <param name="author">Имя отправителя.</param>
+        /// <param name="text">Текст отправленного сообщения.</param>
         [JsonConstructor]
         public Message(DateTime time, string author, string text)
         {
@@ -31,5 +55,8 @@ namespace ChatBotLab
             Author = author ?? string.Empty; // Устанавливает автора или пустую строку
             Text = text ?? string.Empty; // Устанавливает текст или пустую строку
         }
+
+        #endregion
+
     }
 }

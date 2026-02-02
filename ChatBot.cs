@@ -5,32 +5,55 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace ChatBotLab
+namespace ChatBotLab // Пространство имен для чат-бота
 {
-    // Класс чат-бота для обработки сообщений и ведения истории переписки
-    public class ChatBot : IMessageHistory, IMessageProcessor
+    /// <summary>
+    /// Класс чат-бота, реализующий обработку сообщений и хранение истории.
+    /// </summary>
+    public class ChatBot : IMessageHistory, IMessageProcessor 
     {
-        // История сообщений чата
+
+        #region Поля класса ChatBot
+
+        /// <summary>
+        /// Список сообщений в истории чата.
+        /// </summary>
         private List<Message> _history = new List<Message>();
 
-        // Публичная история 
+        /// <summary>
+        /// Свойство для получения истории сообщений в режиме "только для чтения".
+        /// </summary>
         public IReadOnlyList<Message> History => _history;
 
-        // Имя файла для сохранения истории
-        private const string HistoryFile = "chat_history.json";
+        /// <summary>
+        /// Название файла для сохранения истории чата.
+        /// </summary>
+        private const string FileName = "chat_history.json";
 
-        // Добавляет сообщение в историю
-        public  void AddMessage(string author, string text)
+        #endregion
+
+        #region Методы класса ChatBot
+
+        /// <summary>
+        /// Метод для добавления сообщения в историю чата.
+        /// </summary>
+        /// <param name="author">Имя отправителя.</param>
+        /// <param name="text">Текст сообщения.</param>
+        public void AddMessage(string author, string text)
         {
-            _history.Add(new Message(author, text)); // Добавляет сообщение в историю
+            _history.Add(new Message(author, text)); 
         }
 
-        // Обрабатывает сообщение пользователя и возвращает ответ бота
-        public  string ProcessMessage(string userName, string userMessage)
+        /// <summary>
+        /// Метод для обработки входящего сообщения и генерации ответа бота.
+        /// </summary>
+        /// <param name="userName">Имя пользователя, отправившего сообщение.</param>
+        /// <param name="userMessage">Сообщение пользователя.</param>
+        /// <returns>Ответ чат-бота на сообщение пользователя.</returns>
+        public string ProcessMessage(string userName, string userMessage)
         {
-            userName = userName ?? string.Empty;
 
-            /// Реплики заданного шаблона
+            #region Реплики заданного шаблона
 
             // Приветствия
             if (Regex.IsMatch(userMessage, @"\b(привет|здравствуй|hi|добрый\s+день)\b", RegexOptions.IgnoreCase)) // Регулярное выражение для приветствий
@@ -50,7 +73,9 @@ namespace ChatBotLab
                 return "У меня всё хорошо, " + userName + "!";
             }
 
-            /// Простые команды
+            #endregion
+
+            #region Простые команды
 
             // Который час
             if (Regex.IsMatch(userMessage, @"(который\s+час|сколько\s+времени?)\??", RegexOptions.IgnoreCase)) // Регулярное выражение для который час
@@ -65,7 +90,7 @@ namespace ChatBotLab
             }
 
             // Статистика общения с ботом
-            if (Regex.IsMatch(userMessage, @"\bстатистика\b", RegexOptions.IgnoreCase)) // Регулярное выражение для статистики
+            if (Regex.IsMatch(userMessage, @"\bстатистика|статистику|статистики\b", RegexOptions.IgnoreCase)) // Регулярное выражение для статистики
             {
                 int totalMessages = _history.Count; // Общее количество сообщений
                 int userMessages = _history.Count(m => m.Author == userName); // Количество сообщений от пользователя
@@ -73,7 +98,9 @@ namespace ChatBotLab
                 return $"Всего сообщений: {totalMessages}. От пользователя: {userMessages}. От бота: {botMessages}.";
             }
 
-            /// Команды с параметрами
+            #endregion
+
+            #region Команды с параметрами
 
             // Умножение
             var multiplyMatch = Regex.Match(userMessage, @"(умножь|перемножь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для умножения
@@ -101,10 +128,10 @@ namespace ChatBotLab
             var subtractMatch = Regex.Match(userMessage, @"(вычти|минус|отними)\s+(\d+)\s+из\s+(\d+)", RegexOptions.IgnoreCase);
             if (subtractMatch.Success)
             {
-                if (int.TryParse(subtractMatch.Groups[2].Value, out int smaller) &&
-                    int.TryParse(subtractMatch.Groups[3].Value, out int larger))
+                if (int.TryParse(subtractMatch.Groups[2].Value, out int smaller) && // Пытается преобразовать вторую группу в целое число
+                    int.TryParse(subtractMatch.Groups[3].Value, out int larger)) // Пытается преобразовать третью группу в целое число
                 {
-                    // Вычитаем меньшее из большего: larger - smaller
+                    // Вычитаем меньшее из большего
                     return "Результат: " + (larger - smaller);
                 }
             }
@@ -126,7 +153,7 @@ namespace ChatBotLab
             }
 
             // Прямые арифметические выражения
-            var mathMatch = Regex.Match(userMessage, @"^\s*(\-?\d+)\s*([+\-*/])\s*(\-?\d+)\s*$", RegexOptions.IgnoreCase);
+            var mathMatch = Regex.Match(userMessage, @"\s*(\-?\d+)\s*([+\-*/])\s*(\-?\d+)\s*", RegexOptions.IgnoreCase);
             if (mathMatch.Success)
             {
                 if (int.TryParse(mathMatch.Groups[1].Value, out int left) &&
@@ -158,18 +185,22 @@ namespace ChatBotLab
                 }
             }
 
+            #endregion
+
             // Если ничего не подошло
             return "Не понял, " + userName + ". Попробуй спросить по-другому.";
 
         }
 
-        // Сохраняет историю чата в JSON-файл
-        public void SaveHistory() // Сохраняет историю чата в JSON-файл
+        /// <summary>
+        /// Метод для сохранения истории чата в JSON-файл.
+        /// </summary>
+        public void SaveHistory() 
         {
             try
             {
                 var json = JsonSerializer.Serialize(_history); // Сериализует историю в JSON
-                File.WriteAllText(HistoryFile, json); // Записывает историю в файл
+                File.WriteAllText(FileName, json); // Записывает историю в файл
             }
             catch (Exception ex)
             {
@@ -177,14 +208,16 @@ namespace ChatBotLab
             }
         }
 
-        // Загружает историю чата из JSON-файла
+        /// <summary>
+        /// Метод для загрузки истории чата из JSON-файла.
+        /// </summary>
         public void LoadHistory()
         {
-            if (File.Exists(HistoryFile)) // Проверяет, существует ли файл
+            if (File.Exists(FileName)) // Проверяет, существует ли файл
             {
                 try
                 {
-                    var json = File.ReadAllText(HistoryFile); // Читает историю из файла
+                    var json = File.ReadAllText(FileName); // Читает историю из файла
                     _history = JsonSerializer.Deserialize<List<Message>>(json) ?? new List<Message>(); // Десериализует историю из JSON
                 }
                 catch (Exception ex)
@@ -193,5 +226,8 @@ namespace ChatBotLab
                 }
             }
         }
+
+        #endregion
+
     }
 }
