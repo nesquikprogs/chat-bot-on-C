@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -204,7 +205,14 @@ namespace ChatBotLab // Пространство имен для чат-бота
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Ошибка сохранения: " + ex.Message); // Выводит сообщение об ошибке
+                MessageBox.Show(
+                                "Не удалось загрузить историю чата.\n" +
+                                "Чат начнётся заново.\n\n" +
+                                "Техническая ошибка: " + ex.Message,
+                                "Ошибка загрузки",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning
+                                ); // Выводит сообщение об ошибке
             }
         }
 
@@ -222,7 +230,14 @@ namespace ChatBotLab // Пространство имен для чат-бота
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Ошибка загрузки истории: " + ex.Message); // Выводит сообщение об ошибке
+                    MessageBox.Show(
+                                "Не удалось сохранить историю чата.\n" +
+                                "История не сохранится после закрытия.\n\n" +
+                                "Техническая ошибка: " + ex.Message,
+                                "Ошибка сохранения",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning
+                            ); // Выводит сообщение об ошибке
                 }
             }
         }

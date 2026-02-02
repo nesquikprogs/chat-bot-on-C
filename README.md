@@ -8,8 +8,8 @@ todo:
 2. Убрать диалоговое окно при ошибки ввода имени - READY
 3. Сделать два интерфейса(для истории и для обработки сообщений) - READY
 4. Добавить UML - READY
-5. Исправить отображение статистики чата(бот не запоминает сколько сообщений от пользователя в чате) - in progress
-6. Сделать MessageBox для ошибок при чтении/записи в файл json - in progress
+5. Исправить отображение статистики чата(бот не запоминает сколько сообщений от пользователя в чате) - READY
+6. Сделать MessageBox для ошибок при чтении/записи в файл json - READY
 7. Добавить привествие при пустой истории чата - in progress
 
 ---
@@ -53,12 +53,12 @@ todo:
 
 ## Отношения между классами
 
-ChatBot -> IMessageHistory - реализация
-ChatBot -> IMessageProcessor - реализация
-ChatBot -> Message - композиция (ChatBot содержит много Message)
-MainWindow -> IMessageHistory - использование / зависимость
-MainWindow -> IMessageProcessor - использование / зависимость
-MainWindow -> App - использование / зависимость (читает UserName)
-LoginWindow -> App - использование / зависимость (устанавливает UserName)
-LoginWindow -> MainWindow - создание (создаёт и показывает)
-App -> LoginWindow - создание (запускает первым)
+- ChatBot -> IMessageHistory - реализация
+- ChatBot -> IMessageProcessor - реализация
+- ChatBot -> Message - композиция (ChatBot содержит много Message)
+- MainWindow -> IMessageHistory - использование / зависимость
+- MainWindow -> IMessageProcessor - использование / зависимость
+- MainWindow -> App - использование / зависимость (читает UserName)
+- LoginWindow -> App - использование / зависимость (устанавливает UserName)
+- LoginWindow -> MainWindow - создание (создаёт и показывает)
+- App -> LoginWindow - создание (запускает первым)
