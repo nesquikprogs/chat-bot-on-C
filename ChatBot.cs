@@ -87,7 +87,7 @@ namespace ChatBotLab
             }
 
             // Сложение
-            var addMatch = Regex.Match(userMessage, @"(сложи|плюс|прибавь)\s+(\d+)\s+на\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для сложения
+            var addMatch = Regex.Match(userMessage, @"(сложи|плюс|прибавь)\s+(\d+)\s+и\s+(\d+)", RegexOptions.IgnoreCase); // Регулярное выражение для сложения
             if (addMatch.Success)
             {
                 if (int.TryParse(addMatch.Groups[2].Value, out int a) && // Пытается преобразовать вторую группу в целое число
@@ -121,6 +121,39 @@ namespace ChatBotLab
                     }
                     double result = (double)a / b; // Вычисляет результат деления
                     return "Результат: " + result; // Возвращает результат деления
+                }
+            }
+
+            // Прямые арифметические выражения вида "321 - 123", "45 + 67", "100 * 8", "200 / 5"
+            var mathMatch = Regex.Match(userMessage, @"^\s*(\-?\d+)\s*([+\-*/])\s*(\-?\d+)\s*$", RegexOptions.IgnoreCase);
+            if (mathMatch.Success)
+            {
+                if (int.TryParse(mathMatch.Groups[1].Value, out int left) &&
+                    int.TryParse(mathMatch.Groups[3].Value, out int right))
+                {
+                    char op = mathMatch.Groups[2].Value[0];
+
+                    if (op == '+')
+                    {
+                        return "Результат: " + (left + right);
+                    }
+                    else if (op == '-')
+                    {
+                        return "Результат: " + (left - right);
+                    }
+                    else if (op == '*')
+                    {
+                        return "Результат: " + (left * right);
+                    }
+                    else if (op == '/')
+                    {
+                        if (right == 0)
+                        {
+                            return "На ноль делить нельзя!";
+                        }
+                        double result = (double)left / right;
+                        return "Результат: " + result;
+                    }
                 }
             }
 
