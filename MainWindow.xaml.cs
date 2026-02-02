@@ -130,12 +130,21 @@ namespace ChatBotLab
         {
             lstChatHistory.Items.Clear(); // Очищаем текущее отображение истории
 
-            foreach (var msg in history.History) // Проходим по всем сообщениям в истории
+            // Если история пустая — показываем приветствие от бота
+            if (history.History.Count == 0)
             {
-                lstChatHistory.Items.Add($"{msg.Time:HH:mm:ss} [{msg.Author}]: {msg.Text}"); // Добавляем форматированное сообщение в список
+                string welcome = $"Привет, {App.UserName}! Я твой чат-бот. Напиши что-нибудь, чтобы начать!";
+                lstChatHistory.Items.Add($"{DateTime.Now:HH:mm:ss} [Бот]: {welcome}");
+            }
+            else
+            {
+                foreach (var msg in history.History) // Проходим по всем сообщениям в истории
+                {
+                    lstChatHistory.Items.Add($"{msg.Time:HH:mm:ss} [{msg.Author}]: {msg.Text}"); // Добавляем форматированное сообщение в список
+                }
             }
 
-            if (lstChatHistory.Items.Count > 0) // Если есть хотябы одна сообщения в списке
+            if (lstChatHistory.Items.Count > 0) // Если есть хотябы одно сообщение в списке
             {
                 lstChatHistory.ScrollIntoView(lstChatHistory.Items[lstChatHistory.Items.Count - 1]); // Проскролливаем к последнему сообщению
             }
