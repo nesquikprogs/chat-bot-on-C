@@ -42,7 +42,7 @@ ChatBotLab/
 ├── LoginWindow.xaml.cs         # Логика авторизации (валидация без MessageBox)
 ├── MainWindow.xaml             # Главное окно чата (UI)
 └── MainWindow.xaml.cs          # Логика чата (отправка, обновление, сохранение)
-
+```
 
 ## Отношения между классами (UML)
 
