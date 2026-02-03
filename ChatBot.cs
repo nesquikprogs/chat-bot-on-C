@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 namespace ChatBotLab // Пространство имен для чат-бота
 {
     /// <summary>
-    /// Класс чат-бота, реализующий обработку сообщений и хранение истории.
+    /// Класс чат-бота, реализующий обработку сообщений и хранение истории. В модели MVC это модель (Model).
     /// </summary>
     public class ChatBot : IMessageHistory, IMessageProcessor 
     {

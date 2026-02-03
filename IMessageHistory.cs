@@ -3,7 +3,7 @@
 namespace ChatBotLab
 {
     /// <summary>
-    /// Интерфейс для работы с историей сообщений чата.
+    /// Интерфейс для работы с историей сообщений чата. В модели MVC это модель (Model).
     /// </summary>
     public interface IMessageHistory
     {

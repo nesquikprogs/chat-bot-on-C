@@ -4,7 +4,7 @@ using System.Windows;
 namespace ChatBotLab
 {
     /// <summary>
-    /// Класс окна авторизации.
+    /// Класс окна авторизации. В модели MVC это контроллер (Controler).
     /// </summary>
     public partial class LoginWindow : Window
     {
@@ -20,6 +20,8 @@ namespace ChatBotLab
         }
 
         #endregion
+
+        //public string UserName; // ?
 
         #region Обработчики событий
 
@@ -46,8 +48,8 @@ namespace ChatBotLab
 
             try
             {
-                App.UserName = name; // Установка имени пользователя в глобальную переменную
-                new MainWindow().Show(); // Создание и отображение главного окна чата
+               // UserName = name; // Установка имени пользователя в глобальную переменную
+                new MainWindow(name).Show(); // Создание и отображение главного окна чата
                 Close();
             }
             catch (Exception ex)

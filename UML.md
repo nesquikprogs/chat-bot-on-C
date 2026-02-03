@@ -63,6 +63,8 @@ package "ChatBotLab" {
     LoginWindow --> App : устанавливает UserName
     LoginWindow --> MainWindow : создаёт и показывает
 
+    MainWindow O--> СhatBot 
+
     App --> LoginWindow : запускает первым
 }
 

@@ -6,12 +6,17 @@ using System.Windows.Input;
 namespace ChatBotLab
 {
     /// <summary>
-    /// Класс главного окна приложения.
+    /// Класс главного окна приложения. В модели MVC это контроллер (Controler).
     /// </summary>
     public partial class MainWindow : Window
     {
 
         #region Поля класса MainWindow
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string Name;
 
         /// <summary>
         /// Интерфейс для работы с историей сообщений чата.
@@ -30,11 +35,13 @@ namespace ChatBotLab
         /// <summary>
         /// Конструктор главного окна приложения.
         /// </summary>
-        public MainWindow()
+        public MainWindow(string userName)
         {
             InitializeComponent(); // Инициализация компонентов окна
 
             var bot = new ChatBot(); // Создание экземпляра чат-бота
+
+            Name = userName; // ?
 
             // Присваиваем интерфейсы
             history = bot;
@@ -104,16 +111,16 @@ namespace ChatBotLab
         /// </summary>
         private void SendMessage()
         {
-            string userMessage = txtMessage.Text?.Trim(); // Получаем и обрезаем сообщение пользователя
+            string userMessage = txtMessage.Text?.Trim(); // Получаем и обрезаем сообщение пользователя(? это защита от null, то есть если поле UserMessage пустое, то оно будет null)
 
             if (string.IsNullOrWhiteSpace(userMessage)) 
                 return; // Выходим, если сообщение пустое
 
             txtMessage.Clear(); // Очищаем поле ввода
 
-            history.AddMessage(App.UserName, userMessage); // Добавляем сообщение пользователя в историю
+            history.AddMessage(Name, userMessage); // Добавляем сообщение пользователя в историю
 
-            string botResponse = processor.ProcessMessage(App.UserName, userMessage); // Получаем ответ бота
+            string botResponse = processor.ProcessMessage(Name, userMessage); // Получаем ответ бота
 
             if (!string.IsNullOrWhiteSpace(botResponse))
             {
@@ -128,25 +135,26 @@ namespace ChatBotLab
         /// </summary>
         private void UpdateChatHistory()
         {
-            lstChatHistory.Items.Clear(); // Очищаем текущее отображение истории
+            var currentHistory = history.History; 
 
-            // Если история пустая — показываем приветствие от бота
-            if (history.History.Count == 0)
+            // Добавляем только новые (начиная с того, сколько уже есть в ListBox)
+            for (int i = lstChatHistory.Items.Count; i < currentHistory.Count; i++)
             {
-                string welcome = $"Привет, {App.UserName}! Я твой чат-бот. Напиши что-нибудь, чтобы начать!";
+                var msg = currentHistory[i];
+                lstChatHistory.Items.Add($"{msg.Time:HH:mm:ss} [{msg.Author}]: {msg.Text}");
+            }
+
+            // Приветствие, если ничего ещё не было
+            if (lstChatHistory.Items.Count == 0 && currentHistory.Count == 0)
+            {
+                string welcome = $"Привет, {Name}! Я твой чат-бот. Напиши что-нибудь!";
                 lstChatHistory.Items.Add($"{DateTime.Now:HH:mm:ss} [Бот]: {welcome}");
             }
-            else
-            {
-                foreach (var msg in history.History) // Проходим по всем сообщениям в истории
-                {
-                    lstChatHistory.Items.Add($"{msg.Time:HH:mm:ss} [{msg.Author}]: {msg.Text}"); // Добавляем форматированное сообщение в список
-                }
-            }
 
-            if (lstChatHistory.Items.Count > 0) // Если есть хотябы одно сообщение в списке
+            // Прокрутка вниз
+            if (lstChatHistory.Items.Count > 0)
             {
-                lstChatHistory.ScrollIntoView(lstChatHistory.Items[lstChatHistory.Items.Count - 1]); // Проскролливаем к последнему сообщению
+                lstChatHistory.ScrollIntoView(lstChatHistory.Items[lstChatHistory.Items.Count - 1]);
             }
         }
 

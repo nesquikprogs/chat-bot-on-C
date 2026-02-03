@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace ChatBotLab
 {
     /// <summary>
-    /// Класс сообщения в чате.
+    /// Класс сообщения в чате. В модели MVC это модель (Model).
     /// </summary>
     public class Message
     {

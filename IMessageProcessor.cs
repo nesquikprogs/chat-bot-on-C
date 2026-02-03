@@ -1,7 +1,7 @@
 ﻿namespace ChatBotLab
 {
     /// <summary>
-    /// Интерфейс для обработки и генерации ответов чат-бота.
+    /// Интерфейс для обработки и генерации ответов чат-бота. В модели MVC это модель (Model).
     /// </summary>
     public interface IMessageProcessor
     {

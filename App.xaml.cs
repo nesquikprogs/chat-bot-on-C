@@ -10,11 +10,6 @@ namespace ChatBotLab
 
         #region Свойства класса App
 
-        /// <summary>
-        /// Свойство для хранения имени пользователя.
-        /// </summary>
-        public static string UserName { get; set; } = string.Empty;
-
         #endregion
 
         #region Методы 
